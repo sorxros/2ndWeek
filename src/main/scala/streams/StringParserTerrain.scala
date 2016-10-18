@@ -29,43 +29,72 @@ import common._
 trait StringParserTerrain extends GameDef {
 
   /**
-   * A ASCII representation of the terrain. This field should remain
-   * abstract here.
-   */
+    * A ASCII representation of the terrain. This field should remain
+    * abstract here.
+    */
   val level: String
 
   /**
-   * This method returns terrain function that represents the terrain
-   * in `levelVector`. The vector contains parsed version of the `level`
-   * string. For example, the following level
-   *
-   *   val level =
-   *     """ST
-   *       |oo
-   *       |oo""".stripMargin
-   *
-   * is represented as
-   *
-   *   Vector(Vector('S', 'T'), Vector('o', 'o'), Vector('o', 'o'))
-   *
-   * The resulting function should return `true` if the position `pos` is
-   * a valid position (not a '-' character) inside the terrain described
-   * by `levelVector`.
-   */
-  def terrainFunction(levelVector: Vector[Vector[Char]]): Pos => Boolean = ???
+    * This method returns terrain function that represents the terrain
+    * in `levelVector`. The vector contains parsed version of the `level`
+    * string. For example, the following level
+    *
+    * val level =
+    * """ST
+    * |oo
+    * |oo""".stripMargin
+    *
+    * is represented as
+    *
+    * Vector(Vector('S', 'T'), Vector('o', 'o'), Vector('o', 'o'))
+    *
+    * The resulting function should return `true` if the position `pos` is
+    * a valid position (not a '-' character) inside the terrain described
+    * by `levelVector`.
+    */
+  def terrainFunction(levelVector: Vector[Vector[Char]]): Pos => Boolean = pos => levelVector.length >= pos.x && {
+    for {
+      subVector <- levelVector
+      if subVector.length >= pos.y
+    }
+      yield true
+  }.head
+
+//  match {
+//    case xv if xv.isEmpty => throw new NoSuchElementException("Empty vector is not allowed!")
+//    case xv if xv.length == 0 => throw new NoSuchElementException("Zero length vector is not allowed!")
+//    case xv if (xv.length >= pos.x) => xv.take(pos.x).length >= pos.y
+//    case _ => false
+//  }
 
   /**
-   * This function should return the position of character `c` in the
-   * terrain described by `levelVector`. You can assume that the `c`
-   * appears exactly once in the terrain.
-   *
-   * Hint: you can use the functions `indexWhere` and / or `indexOf` of the
-   * `Vector` class
-   */
-  def findChar(c: Char, levelVector: Vector[Vector[Char]]): Pos = ???
+    * This function should return the position of character `c` in the
+    * terrain described by `levelVector`. You can assume that the `c`
+    * appears exactly once in the terrain.
+    *
+    * Hint: you can use the functions `indexWhere` and / or `indexOf` of the
+    * `Vector` class
+    */
+  def findChar(c: Char, levelVector: Vector[Vector[Char]]): Pos = {
+    for {
+      subVector <- levelVector
+      if subVector.contains(c)
+    }
+      yield Pos(levelVector.indexOf(subVector), subVector.indexOf(c))
+  }.head
+
+
+
+      //Pos(levelVector.indexOf(subVector), subVector.indexOf(c))
+
+//    levelVector match {
+//    case xv if xv.isEmpty => throw new NoSuchElementException("Char not find!")
+//    case xv if xv.head.contains(c) => Pos(levelVector.indexOf(xv.head), xv.head.indexOf(c))
+//    case xv => findChar(c, xv.tail)
+//  }
 
   private lazy val vector: Vector[Vector[Char]] =
-    Vector(level.split("\n").map(str => Vector(str: _*)): _*)
+      Vector(level.split("\n").map(str => Vector(str: _*)): _*)
 
   lazy val terrain: Terrain = terrainFunction(vector)
   lazy val startPos: Pos = findChar('S', vector)

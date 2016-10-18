@@ -9,10 +9,16 @@ import org.scalatest.junit.JUnitRunner
 class HardTestSuite extends FunSuite {
 
   trait SolutionChecker {
-    val xs = NonEmpty(1, Empty, Empty)
-    val ys = NonEmpty(2, Empty, Empty)
+    val l = NonEmpty(1, Empty, Empty)
+    val r = NonEmpty(2, Empty, Empty)
+    val xs = NonEmpty(3, l, r)
+    val ly = NonEmpty(4, Empty, Empty)
+    val ry = NonEmpty(5, Empty, Empty)
+    val ys = NonEmpty(6, ly, ry)
     val es = Empty
-    val x  = 2
+    val x  = 1
+    val y  = 2
+    val z  = 3
   }
 
   test("findChar level 1") {
@@ -21,6 +27,7 @@ class HardTestSuite extends FunSuite {
       assert(((es union ys) contains x) == ((es contains x) || (ys contains x)))
       assert(((xs union es) contains x) == ((xs contains x) || (es contains x)))
       assert(((es union es) contains x) == ((es contains x) || (es contains x)))
+      //assert()
     }
   }
 }
