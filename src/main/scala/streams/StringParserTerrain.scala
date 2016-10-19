@@ -52,17 +52,24 @@ trait StringParserTerrain extends GameDef {
     * a valid position (not a '-' character) inside the terrain described
     * by `levelVector`.
     */
-  def terrainFunction(levelVector: Vector[Vector[Char]]): Pos => Boolean = pos => levelVector.length >= pos.x && {
-    for {
-      subVector <- levelVector
-      if subVector.length >= pos.y
+  def terrainFunction(levelVector: Vector[Vector[Char]]): Pos => Boolean = pos => pos match {
+    case px if px.x >= 0 && px.x <= levelVector.length-1 => {
+      lazy val subVecotr = levelVector.apply(px.x)
+      if(px.y >= 0 && px.y <= subVecotr.length-1) subVecotr.apply(px.y) != "-"
+      else false
     }
-      yield true
-  }.head
+    case _ => false
+  }
 
-//  match {
-//    case xv if xv.isEmpty => throw new NoSuchElementException("Empty vector is not allowed!")
-//    case xv if xv.length == 0 => throw new NoSuchElementException("Zero length vector is not allowed!")
+
+//    levelVector.length >= pos.x && {
+//        for (subVector <- levelVector) yield subVector.length >= pos.y
+//      }.reduce(_||_)
+//      //.reduceleft(_||_)
+
+//    levelVector match {
+//    case xv if xv.isEmpty => false //throw new NoSuchElementException("Empty vector is not allowed!")
+//    //case xv if xv.length == 0 => throw new NoSuchElementException("Zero length vector is not allowed!")
 //    case xv if (xv.length >= pos.x) => xv.take(pos.x).length >= pos.y
 //    case _ => false
 //  }
@@ -82,16 +89,6 @@ trait StringParserTerrain extends GameDef {
     }
       yield Pos(levelVector.indexOf(subVector), subVector.indexOf(c))
   }.head
-
-
-
-      //Pos(levelVector.indexOf(subVector), subVector.indexOf(c))
-
-//    levelVector match {
-//    case xv if xv.isEmpty => throw new NoSuchElementException("Char not find!")
-//    case xv if xv.head.contains(c) => Pos(levelVector.indexOf(xv.head), xv.head.indexOf(c))
-//    case xv => findChar(c, xv.tail)
-//  }
 
   private lazy val vector: Vector[Vector[Char]] =
       Vector(level.split("\n").map(str => Vector(str: _*)): _*)
