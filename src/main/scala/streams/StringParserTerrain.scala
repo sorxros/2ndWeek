@@ -54,25 +54,12 @@ trait StringParserTerrain extends GameDef {
     */
   def terrainFunction(levelVector: Vector[Vector[Char]]): Pos => Boolean = pos => pos match {
     case px if px.x >= 0 && px.x <= levelVector.length-1 => {
-      lazy val subVecotr = levelVector.apply(px.x)
-      if(px.y >= 0 && px.y <= subVecotr.length-1) subVecotr.apply(px.y) != "-"
+      lazy val subVector = levelVector.apply(px.x)
+      if(px.y >= 0 && px.y <= subVector.length-1) subVector.apply(px.y) != "-"
       else false
     }
     case _ => false
   }
-
-
-//    levelVector.length >= pos.x && {
-//        for (subVector <- levelVector) yield subVector.length >= pos.y
-//      }.reduce(_||_)
-//      //.reduceleft(_||_)
-
-//    levelVector match {
-//    case xv if xv.isEmpty => false //throw new NoSuchElementException("Empty vector is not allowed!")
-//    //case xv if xv.length == 0 => throw new NoSuchElementException("Zero length vector is not allowed!")
-//    case xv if (xv.length >= pos.x) => xv.take(pos.x).length >= pos.y
-//    case _ => false
-//  }
 
   /**
     * This function should return the position of character `c` in the
